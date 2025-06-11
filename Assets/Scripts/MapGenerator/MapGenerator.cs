@@ -62,7 +62,6 @@ public class MapGenerator : MonoBehaviour
 
         while (true)
         {
-            Debug.Log(potentialDoors.Count);
             iterations++;
             if (iterations > THRESHOLD) throw new System.Exception("Iteration limit exceeded");
             if (potentialDoors.Count == 0)
@@ -105,9 +104,17 @@ public class MapGenerator : MonoBehaviour
                 Room newRoom = selectRoom(validRooms);
                 Vector2Int offset = targetDoor.GetMatching().GetGridCoordinates();
                 occupied.AddRange(newRoom.GetGridCoordinates(offset));
-                doors.AddRange(newRoom.GetDoors(offset));
+
+                List<Door> newDoors = newRoom.GetDoors(offset);
+                foreach (Door door in newDoors)
+                {
+                    if (!door.IsMatching(targetDoor))
+                    {
+                        doors.Add(door);
+                    }
+                }
                 doors.Remove(targetDoor);
-                doors.Remove(targetDoor.GetMatching());
+
                 if (GenerateWithBacktracking(occupied, doors, depth + 1))
                 {
                     // Instantiate prefab (place room)
