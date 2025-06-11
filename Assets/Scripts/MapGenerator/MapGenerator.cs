@@ -61,10 +61,14 @@ public class MapGenerator : MonoBehaviour
 
         while (true)
         {
+            Debug.Log(potentialDoors.Count);
+            iterations++;
+            if (iterations > THRESHOLD) throw new System.Exception("Iteration limit exceeded");
             if (potentialDoors.Count == 0)
             {
                 return false;
             }
+
             // Select one of the doors that still have to be connected
             Door targetDoor = potentialDoors[Random.Range(0, potentialDoors.Count)];
             if (occupied.Contains(targetDoor.GetMatching().GetGridCoordinates()))
@@ -78,7 +82,7 @@ public class MapGenerator : MonoBehaviour
             List<Room> validRooms = new List<Room>();
             foreach (Room room in rooms)
             {
-                foreach (Door door in room.GetDoors())
+                foreach (Door door in room.GetDoors(targetDoor.GetMatching().GetGridCoordinates()))
                 {
                     iterations++;
                     if (targetDoor.IsMatching(door))
