@@ -57,20 +57,54 @@ public class MapGenerator : MonoBehaviour
             return depth >= 5;
         }
 
-        // Select one of the doors that still have to be connected
-        Door targetDoor = doors[Random.Range(0, doors.Count)];
-        if (occupied.Contains(targetDoor.GetMatching().GetGridCoordinates()))
-        {
-            return false;
-        }
+        List<Door> potentialDoors = new List<Door>(doors);
 
-        // Determines which of the available rooms are compatible with this door
-        // if there are none, return false
-        Room newRoom = SelectRoom(targetDoor);
-        if (newRoom == null)
-        {
-            return false;
+        while (true)
+        {   
+            // Select one of the doors that still have to be connected
+            Door targetDoor = potentialDoors[Random.Range(0, potentialDoors.Count)];
+            if (occupied.Contains(targetDoor.GetMatching().GetGridCoordinates()))
+            {
+                potentialDoors.Remove(targetDoor);
+                continue;
+            }
+
+            // Determines which of the available rooms are compatible with this door
+            // if there are none, return false
+            List<Room> validRooms = new List<Room>();
+            foreach (Room room in rooms)
+            {
+                foreach (Door door in room.GetDoors())
+                {
+                    iterations++;
+                    if (targetDoor.IsMatching(door))
+                    {
+                        validRooms.Add(room);
+                        break;
+                    }
+                }
+            }
+            if (validRooms.Count == 0)
+            {
+                return false;
+            }
+
+            while (true)
+            {
+                Room newRoom = validRooms[0];
+                if (newRoom == null)
+                {
+                    return false;
+                }
+
+
+                if (potentialDoors.Count == 0)
+                {
+                    return false;
+                }
+            }
         }
+    
 
         // Tentatively place the room and recursively call GenerateWithBacktracking
         Vector2Int offset = targetDoor.GetMatching().GetGridCoordinates();
@@ -86,30 +120,6 @@ public class MapGenerator : MonoBehaviour
         }
 
         return false;
-    }
-
-    Room SelectRoom(Door targetDoor)
-    {
-
-        List<Room> validRooms = new List<Room>();
-        foreach (Room room in rooms)
-        {
-            foreach (Door door in room.GetDoors())
-            {
-                iterations++;
-                if (targetDoor.IsMatching(door))
-                {
-                    validRooms.Add(room);
-                    break;
-                }
-            }
-        }
-        if (validRooms.Count == 0)
-        {
-            return null;
-        }
-        target = validRooms[0];
-        return target;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
