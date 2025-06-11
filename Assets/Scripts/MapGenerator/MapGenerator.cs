@@ -47,6 +47,7 @@ public class MapGenerator : MonoBehaviour
 
     bool GenerateWithBacktracking(List<Vector2Int> occupied, List<Door> doors, int depth)
     {
+        Debug.Log("depth = " + depth);
         if (iterations > THRESHOLD) throw new System.Exception("Iteration limit exceeded");
 
         // If there are no more doors that need to be connected check 
@@ -124,7 +125,7 @@ public class MapGenerator : MonoBehaviour
 
     Room selectRoom(List<Room> rooms)
     {
-        return rooms[0];
+        return rooms[Random.Range(0, rooms.Count)];
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
