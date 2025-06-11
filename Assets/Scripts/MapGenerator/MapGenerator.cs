@@ -72,6 +72,17 @@ public class MapGenerator : MonoBehaviour
             return false;
         }
 
+        // Tentatively place the room and recursively call GenerateWithBacktracking
+        Vector2Int offset = targetDoor.GetMatching().GetGridCoordinates();
+        occupied.AddRange(newRoom.GetGridCoordinates(offset));
+        doors.AddRange(newRoom.GetDoors(offset));
+        doors.Remove(targetDoor);
+        doors.Remove(targetDoor.GetMatching());
+        if (GenerateWithBacktracking(occupied, doors, depth + 1))
+        {
+            return true;
+        }
+
         iterations++;
         return false;
     }
