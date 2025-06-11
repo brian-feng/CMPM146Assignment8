@@ -337,12 +337,19 @@ MonoBehaviour:
   - {fileID: 7328084662367532751, guid: e1d3001d62675904a80983098b5105d7, type: 3}
   - {fileID: 7328084662367532751, guid: 12c5b1ddc02561842b6f88a895dcbf2a, type: 3}
   - {fileID: 7328084662367532751, guid: 28b1cf9aa0d85bb40b848849db84fdec, type: 3}
+  - {fileID: 7328084662367532751, guid: a65b4f678a69ed24fb04fd5fb964347b, type: 3}
+  - {fileID: 7328084662367532751, guid: da54436ae2124824ca2c3b0db3c161b6, type: 3}
+  - {fileID: 7328084662367532751, guid: 65da41a526cc04c1eadc972b63a14ced, type: 3}
+  - {fileID: 7328084662367532751, guid: 038f51f9a10a448b5ba84085a3540011, type: 3}
+  - {fileID: 7328084662367532751, guid: 0d52e0f1ba0d34495b0e4026d1c2aa9d, type: 3}
+  - {fileID: 7328084662367532751, guid: 6026805b75c3a464d95783d4126bf2d7, type: 3}
+  - {fileID: 7328084662367532751, guid: da54436ae2124824ca2c3b0db3c161b6, type: 3}
   vertical_hallway: {fileID: 5255264242106100983, guid: 23dab4baa5c4e3d4f9ab82b747040843, type: 3}
   horizontal_hallway: {fileID: 1508018506499616265, guid: da4748670254bcd48a9c066ed148bec1, type: 3}
   start: {fileID: 7328084662367532751, guid: fbb7b04d19af1aa4aad44cc45b15c4d1, type: 3}
   target: {fileID: 7328084662367532751, guid: 0b2779608081820479b40f34b30be409, type: 3}
   MAX_SIZE: 25
-  THRESHOLD: 1000
+  THRESHOLD: 1000000
 --- !u!4 &1893224133
 Transform:
   m_ObjectHideFlags: 0
