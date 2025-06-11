@@ -150,6 +150,22 @@ public class MapGenerator : MonoBehaviour
 
     Room selectRoom(List<Room> rooms)
     {
+        int totalWeight = 0;
+        foreach (Room room in rooms)
+        {
+            totalWeight += room.weight;
+        }
+
+        int n = Random.Range(0, totalWeight);
+        int count = 0;
+        foreach (Room room in rooms)
+        {
+            count += room.weight;
+            if (n < count)
+            {
+                return room;
+            }
+        }
         return rooms[Random.Range(0, rooms.Count)];
     }
 
