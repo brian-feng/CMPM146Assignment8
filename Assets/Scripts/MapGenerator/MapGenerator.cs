@@ -60,7 +60,11 @@ public class MapGenerator : MonoBehaviour
         List<Door> potentialDoors = new List<Door>(doors);
 
         while (true)
-        {   
+        {
+            if (potentialDoors.Count == 0)
+            {
+                return false;
+            }
             // Select one of the doors that still have to be connected
             Door targetDoor = potentialDoors[Random.Range(0, potentialDoors.Count)];
             if (occupied.Contains(targetDoor.GetMatching().GetGridCoordinates()))
@@ -86,40 +90,37 @@ public class MapGenerator : MonoBehaviour
             }
             if (validRooms.Count == 0)
             {
-                return false;
+                potentialDoors.Remove(targetDoor);
+                continue;
             }
 
             while (true)
             {
-                Room newRoom = validRooms[0];
-                if (newRoom == null)
+                // Tentatively place the room and recursively call GenerateWithBacktracking
+                Room newRoom = selectRoom(validRooms);
+                Vector2Int offset = targetDoor.GetMatching().GetGridCoordinates();
+                occupied.AddRange(newRoom.GetGridCoordinates(offset));
+                doors.AddRange(newRoom.GetDoors(offset));
+                doors.Remove(targetDoor);
+                doors.Remove(targetDoor.GetMatching());
+                if (GenerateWithBacktracking(occupied, doors, depth + 1))
                 {
-                    return false;
+                    // Instantiate prefab (place room)
+                    newRoom.Place(newRoom.GetGridCoordinates(offset)[0]);
+                    return true;
                 }
-
-
-                if (potentialDoors.Count == 0)
+                else
                 {
-                    return false;
+                    validRooms.Remove(newRoom);
+                    continue;
                 }
             }
         }
-    
+    }
 
-        // Tentatively place the room and recursively call GenerateWithBacktracking
-        Vector2Int offset = targetDoor.GetMatching().GetGridCoordinates();
-        occupied.AddRange(newRoom.GetGridCoordinates(offset));
-        doors.AddRange(newRoom.GetDoors(offset));
-        doors.Remove(targetDoor);
-        doors.Remove(targetDoor.GetMatching());
-        if (GenerateWithBacktracking(occupied, doors, depth + 1))
-        {
-            //Instantiate prefab (place room)
-            newRoom.Place(newRoom.GetGridCoordinates(offset)[0]);
-            return true;
-        }
-
-        return false;
+    Room selectRoom(List<Room> rooms)
+    {
+        return rooms[0];
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
