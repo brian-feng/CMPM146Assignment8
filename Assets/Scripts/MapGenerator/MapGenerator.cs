@@ -80,20 +80,23 @@ public class MapGenerator : MonoBehaviour
         doors.Remove(targetDoor.GetMatching());
         if (GenerateWithBacktracking(occupied, doors, depth + 1))
         {
+            //Instantiate prefab (place room)
+            newRoom.Place(newRoom.GetGridCoordinates(offset)[0]);
             return true;
         }
 
-        iterations++;
         return false;
     }
 
     Room SelectRoom(Door targetDoor)
     {
+
         List<Room> validRooms = new List<Room>();
         foreach (Room room in rooms)
         {
             foreach (Door door in room.GetDoors())
             {
+                iterations++;
                 if (targetDoor.IsMatching(door))
                 {
                     validRooms.Add(room);
