@@ -48,6 +48,7 @@ public class MapGenerator : MonoBehaviour
     bool GenerateWithBacktracking(List<Vector2Int> occupied, List<Door> doors, int depth)
     {
         Debug.Log("depth = " + depth);
+        Debug.Log("doors = " + doors.Count);
         if (iterations > THRESHOLD) throw new System.Exception("Iteration limit exceeded");
 
         // If there are no more doors that need to be connected check 
@@ -77,19 +78,31 @@ public class MapGenerator : MonoBehaviour
                 continue;
             }
 
+            if (targetDoor.GetMatching().GetGridCoordinates().magnitude > 25)
+            {
+                potentialDoors.Remove(targetDoor);
+                continue;
+            }
             // Determines which of the available rooms are compatible with this door
             // if there are none, return false
             List<Room> validRooms = new List<Room>();
             foreach (Room room in rooms)
             {
+                bool hasMatch = false;
+                bool hasBadDoor = false;
                 foreach (Door door in room.GetDoors(targetDoor.GetMatching().GetGridCoordinates()))
                 {
                     iterations++;
                     if (targetDoor.IsMatching(door))
                     {
-                        validRooms.Add(room);
-                        break;
+                        hasMatch = true;
                     }
+                    else if (occupied.Contains(door.GetMatching().GetGridCoordinates())){
+                        hasBadDoor = true;
+                    }
+                }
+                if (hasMatch && !hasBadDoor) {
+                    validRooms.Add(room);
                 }
             }
             if (validRooms.Count == 0)
@@ -100,6 +113,11 @@ public class MapGenerator : MonoBehaviour
 
             while (true)
             {
+                if (validRooms.Count == 0)
+                {
+                    potentialDoors.Remove(targetDoor);
+                    break;
+                }
                 // Tentatively place the room and recursively call GenerateWithBacktracking
                 Room newRoom = selectRoom(validRooms);
                 Vector2Int offset = targetDoor.GetMatching().GetGridCoordinates();
