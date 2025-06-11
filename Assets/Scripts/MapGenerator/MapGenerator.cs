@@ -47,6 +47,19 @@ public class MapGenerator : MonoBehaviour
     bool GenerateWithBacktracking(List<Vector2Int> occupied, List<Door> doors, int depth)
     {
         if (iterations > THRESHOLD) throw new System.Exception("Iteration limit exceeded");
+
+        // If there are no more doors that need to be connected check 
+        // if the dungeon has the required minimum size and 
+        // return true if it does, false otherwise
+        if (doors.Count == 0)
+        {
+            return depth >= 5;
+        }
+
+        Door targetDoor = doors[Random.Range(0, doors.Count)];
+        Door.Direction direction = targetDoor.GetDirection();
+
+        iterations++;
         return false;
     }
 
