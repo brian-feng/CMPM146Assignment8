@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using Unity.VisualScripting;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -56,11 +57,45 @@ public class MapGenerator : MonoBehaviour
             return depth >= 5;
         }
 
+        // Select one of the doors that still have to be connected
         Door targetDoor = doors[Random.Range(0, doors.Count)];
-        Door.Direction direction = targetDoor.GetDirection();
+        if (occupied.Contains(targetDoor.GetMatching().GetGridCoordinates()))
+        {
+            return false;
+        }
+
+        // Determines which of the available rooms are compatible with this door
+        // if there are none, return false
+        Room newRoom = SelectRoom(targetDoor);
+        if (newRoom == null)
+        {
+            return false;
+        }
 
         iterations++;
         return false;
+    }
+
+    Room SelectRoom(Door targetDoor)
+    {
+        List<Room> validRooms = new List<Room>();
+        foreach (Room room in rooms)
+        {
+            foreach (Door door in room.GetDoors())
+            {
+                if (targetDoor.IsMatching(door))
+                {
+                    validRooms.Add(room);
+                    break;
+                }
+            }
+        }
+        if (validRooms.Count == 0)
+        {
+            return null;
+        }
+        target = validRooms[0];
+        return target;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
