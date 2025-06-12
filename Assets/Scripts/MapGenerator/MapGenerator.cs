@@ -27,6 +27,8 @@ public class MapGenerator : MonoBehaviour
     
     int iterations;
 
+    bool targetPlaced = false;
+
     public void Generate()
     {
         // dispose of game objects from previous generation process
@@ -136,7 +138,15 @@ public class MapGenerator : MonoBehaviour
                 if (GenerateWithBacktracking(occupied, doors, depth + 1))
                 {
                     // Instantiate prefab (place room)
-                    newRoom.Place(newRoom.GetGridCoordinates(offset)[0]);
+                    if (newRoom.name == "Deadend" && !targetPlaced)
+                    {
+                        target.Place(target.GetGridCoordinates(offset)[0]);
+                        targetPlaced = true;
+                    }
+                    else
+                    {
+                        newRoom.Place(newRoom.GetGridCoordinates(offset)[0]);
+                    }
                     return true;
                 }
                 else
