@@ -9,8 +9,11 @@ public class MapGenerator : MonoBehaviour
     public Hallway vertical_hallway;
     public Hallway horizontal_hallway;
     public Room start;
-    public Room target;
-
+    public Room target_left;
+    public Room target_up;
+    
+    public Room target_right;
+    public Room target_down;
     // Constraint: How big should the dungeon be at most
     // this will limit the run time (~10 is a good value 
     // during development, later you'll want to set it to 
@@ -138,9 +141,24 @@ public class MapGenerator : MonoBehaviour
                 if (GenerateWithBacktracking(occupied, doors, depth + 1))
                 {
                     // Instantiate prefab (place room)
-                    if (newRoom.name == "Deadend" && !targetPlaced)
+                    if (!targetPlaced && newRoom.GetDoors().Count == 1)
                     {
-                        target.Place(target.GetGridCoordinates(offset)[0]);
+                        if (newRoom.GetDoors()[0].GetDirection() == Door.Direction.WEST)
+                        {
+                            target_left.Place(target_left.GetGridCoordinates(offset)[0]);
+                        }
+                        if (newRoom.GetDoors()[0].GetDirection() == Door.Direction.SOUTH)
+                        {
+                            target_down.Place(target_down.GetGridCoordinates(offset)[0]);
+                        }
+                        if (newRoom.GetDoors()[0].GetDirection() == Door.Direction.EAST)
+                        {
+                            target_right.Place(target_right.GetGridCoordinates(offset)[0]);
+                        }
+                        if (newRoom.GetDoors()[0].GetDirection() == Door.Direction.NORTH)
+                        {
+                            target_up.Place(target_up.GetGridCoordinates(offset)[0]);
+                        }
                         targetPlaced = true;
                     }
                     else
